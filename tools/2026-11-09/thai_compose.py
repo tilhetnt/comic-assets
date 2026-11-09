@@ -5,16 +5,16 @@ import numpy as np
 from PIL import Image, ImageDraw
 S=int(sys.argv[2]) if len(sys.argv)>2 else 60; PITCH=int(sys.argv[3]) if len(sys.argv)>3 else round(S*1.6)
 def tm_th(lines,pitch=None):
-    f=mali(S); bs=[f.getbbox(l,stroke_width=2) for l in lines]; tw=max(b[2]-b[0] for b in bs)
+    f=mali(S); bs=[f.getbbox(l) for l in lines]; tw=max(b[2]-b[0] for b in bs)
     top=min(b[1] for b in bs); bot=max(b[3] for b in bs[-1:])
     th=PITCH*(len(lines)-1)+(bs[-1][3]-top)+10
     m=Image.new('L',(tw+8,th+8),0); d=ImageDraw.Draw(m)
-    for i,(l,b) in enumerate(zip(lines,bs)): d.text(((tw-(b[2]-b[0]))//2-b[0]+4,i*PITCH-top+4),l,font=f,fill=255,stroke_width=2,stroke_fill=255)
+    for i,(l,b) in enumerate(zip(lines,bs)): d.text(((tw-(b[2]-b[0]))//2-b[0]+4,i*PITCH-top+4),l,font=f,fill=255)
     return np.array(m)>127
 C.text_mask=tm_th
 SA=C.speech_asset('speech_empty.png'); SB=C.speech_asset('speech_empty_flip.png')
-L={1:['ลูกค้าใหญ่','ออเดอร์ใหญ่ผ่าน Coke บัดดี้','ดีใจจังหู!'],2:['เดือนหนึ่งมาแค่สองครั้ง','ก็เลยต้องไปแม็คโคร'],3:['สั่งตรงนี้เลยครับ','เราส่งถึงร้าน ผมก็ได้ยอดขาย!'],
-4:['ฝรั่งดื่มโค้กเหม็ดเลย! ขายหมดแล้ว!','สั่งผ่าน Coke บัดดี้เลยดีกว่า!'],5:['ได้ผลจริง!','ถูกใจพนักงานขายพรีเซลจังหู!'],6:['ยอดแบบนี้','ให้ตู้แช่ที่เธอขอได้แน่!']}
+L={1:['ลูกค้าใหญ่ ออเดอร์ใหญ่','ผ่าน Coke บัดดี้ ดีใจจังหู!'],2:['เดือนนึงมาแค่สองหน','เลยต้องไปแม็คโครเอง'],3:['สั่งในแอปเลยครับ','ส่งถึงร้าน ผมก็ได้ยอดด้วย!'],
+4:['ฝรั่งกินโค้กเหม็ดเลย! ขายดีจังหู!','สั่งผ่าน Coke บัดดี้ดีกว่า!'],5:['ใช้ได้จริง!','ถูกใจน้องเซลส์จังหู!'],6:['ยอดแบบนี้ ขอตู้แช่','ให้พี่เขาตามที่ขอได้แน่!']}
 k=int(sys.argv[1]); out='th_p%d'%k
 import shutil
 def go(*a,**kw):
